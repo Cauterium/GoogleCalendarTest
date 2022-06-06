@@ -1,6 +1,6 @@
 # GoogleCalendarTest
 
-# ToDo's:
+## ToDo's:
 GUI
 
 Functionality to copy events from one calendar to another
