@@ -11,6 +11,8 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.CalendarList;
+import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
@@ -24,11 +26,17 @@ import java.util.List;
 
 /* class to demonstarte use of Calendar events list API */
 public class Application {
-    /** Application name. */
+    /**
+     * Application name.
+     */
     private static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
-    /** Global instance of the JSON factory. */
+    /**
+     * Global instance of the JSON factory.
+     */
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    /** Directory to store authorization tokens for this application. */
+    /**
+     * Directory to store authorization tokens for this application.
+     */
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     /**
@@ -40,6 +48,7 @@ public class Application {
 
     /**
      * Creates an authorized Credential object.
+     *
      * @param HTTP_TRANSPORT The network HTTP Transport.
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
@@ -92,5 +101,18 @@ public class Application {
                 System.out.printf("%s (%s)\n", event.getSummary(), start);
             }
         }
+
+
+        //Iterate through entries in calendar list
+        String pageToken = null;
+        do {
+            CalendarList calendarList = service.calendarList().list().setPageToken(pageToken).execute();
+            List<CalendarListEntry> calendarListEntries = calendarList.getItems();
+
+            for (CalendarListEntry calendarListEntry : calendarListEntries) {
+                System.out.println(calendarListEntry.getSummary());
+            }
+            pageToken = calendarList.getNextPageToken();
+        } while (pageToken != null);
     }
 }
